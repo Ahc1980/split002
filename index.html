@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana & Ariel - Finanzas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4e54c8; /* Ana */
+            --secondary: #ff9966; /* Ariel */
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #333;
+            --settle: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            margin: 0; padding: 15px;
+            color: var(--text);
+            padding-bottom: 100px; /* Espacio para scroll */
+        }
+
+        h1 { text-align: center; font-size: 1.4rem; margin: 10px 0; }
+        
+        .card {
+            background: var(--card);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        /* PESTAÑAS */
+        .tabs { display: flex; margin-bottom: 15px; background: #eee; border-radius: 10px; padding: 4px; }
+        .tab { 
+            flex: 1; padding: 8px; text-align: center; cursor: pointer; 
+            color: #666; border-radius: 8px; font-size: 0.9rem; transition: 0.3s;
+        }
+        .tab.active { background: #fff; color: #333; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* VISUALIZACIONES */
+        .chart-wrapper {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .balance-msg {
+            text-align: center; padding: 12px; border-radius: 10px;
+            font-weight: bold; margin-bottom: 15px;
+        }
+        .green-box { background: #d4edda; color: #155724; }
+        .red-box { background: #f8d7da; color: #721c24; }
+        .grey-box { background: #e2e3e5; color: #383d41; }
+
+        .stats-row {
+            display: flex; justify-content: space-between; text-align: center;
+            font-size: 0.9rem; margin-top: 15px; padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .ana-text { color: var(--primary); font-weight: bold; font-size: 1.1rem;}
+        .ariel-text { color: var(--secondary); font-weight: bold; font-size: 1.1rem;}
+
+        /* BOTÓN SALDAR */
+        #settleBtnContainer { margin-top: 15px; display: none; }
+        .settle-btn {
+            width: 100%; background: var(--settle); color: white;
+            border: none; padding: 12px; border-radius: 10px;
+            font-weight: bold; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .settle-btn:active { transform: scale(0.98); }
+
+        /* MODAL (Ventana Emergente) */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; width: 85%; max-width: 350px; padding: 20px;
+            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-cancel { background: #eee; color: #333; flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold;}
+        .btn-pay { background: var(--settle); color: white; flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold;}
+
+        /* FORMULARIO */
+        label { display: block; margin: 10px 0 5px; font-size: 0.9rem; font-weight: 600; color: #555;}
+        input, select {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px;
+            background: #fafafa; font-size: 1rem; box-sizing: border-box;
+        }
+
+        .toggle-user { display: flex; gap: 10px; margin-top: 5px; }
+        .user-btn {
+            flex: 1; padding: 12px; border: 2px solid #eee; border-radius: 10px;
+            text-align: center; cursor: pointer; font-weight: 600; transition: 0.2s;
+        }
+        .active-ana { background: rgba(78, 84, 200, 0.1); border-color: var(--primary); color: var(--primary); }
+        .active-ariel { background: rgba(255, 153, 102, 0.1); border-color: var(--secondary); color: var(--secondary); }
+
+        .add-btn {
+            width: 100%; background: #333; color: white; border: none;
+            padding: 15px; border-radius: 10px; margin-top: 20px;
+            font-weight: bold; font-size: 1rem;
+        }
+
+        /* LISTA */
+        .expense-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #eee;
+        }
+        .delete-btn { border: none; background: none; color: #ff4d4d; margin-left: 10px; padding: 5px;}
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; background: #eee; color: #666; margin-left: 5px;}
+
+    </style>
+</head>
+<body>
+
+    <h1>📊 Finanzas: Ana & Ariel</h1>
+
+    <div class="card">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('balance', this)">⚖️ Balance</div>
+            <div class="tab" onclick="showTab('categorias', this)">🍕 Categorías</div>
+            <div class="tab" onclick="showTab('mensual', this)">📅 Mensual</div>
+        </div>
+
+        <div id="tab-balance">
+            <div id="balanceMsg" class="balance-msg grey-box">Cargando...</div>
+            
+            <div id="settleBtnContainer">
+                <button class="settle-btn" onclick="openSettleModal()">
+                    <i class="fas fa-hand-holding-usd"></i> <span id="settleBtnText">Saldar Deuda</span>
+                </button>
+            </div>
+
+            <div class="chart-wrapper">
+                <canvas id="balanceChart"></canvas>
+            </div>
+            <div class="stats-row">
+                <div>
+                    <div style="font-size:0.8rem; color:#888">Pagó Ana</div>
+                    <div id="totalAna" class="ana-text">$0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:#888">Total Grupo</div>
+                    <div id="totalGlobal" style="font-weight:bold; font-size:1.1rem">$0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:#888">Pagó Ariel</div>
+                    <div id="totalAriel" class="ariel-text">$0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-categorias" style="display:none;">
+            <div class="chart-wrapper">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <p style="text-align:center; color:#888; font-size:0.8rem; margin-top:10px">Gastos por categoría</p>
+        </div>
+
+        <div id="tab-mensual" style="display:none;">
+            <div class="chart-wrapper">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+            <p style="text-align:center; color:#888; font-size:0.8rem; margin-top:10px">Evolución del gasto total</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">➕ Nuevo Gasto</h3>
+        <label>¿Quién pagó?</label>
+        <div class="toggle-user">
+            <div class="user-btn active-ana" id="btnAna" onclick="setUser('Ana')">Ana</div>
+            <div class="user-btn" id="btnAriel" onclick="setUser('Ariel')">Ariel</div>
+        </div>
+
+        <label>Monto ($)</label>
+        <input type="number" id="amount" placeholder="0" inputmode="decimal">
+
+        <label>Categoría</label>
+        <select id="category">
+            <option value="Comida">🛒 Supermercado / Comida</option>
+            <option value="Mano de obra">🛠️ Mano de obra</option>
+            <option value="Hogar">🏠 Hogar / Muebles</option>
+            <option value="Servicios">💡 Servicios (Luz/Gas)</option>
+            <option value="Ocio">🍿 Salidas / Ocio</option>
+            <option value="Otros">📦 Otros</option>
+        </select>
+
+        <label>Detalle (Opcional)</label>
+        <input type="text" id="concept" placeholder="Ej. Carne, Pintura...">
+
+        <button class="add-btn" onclick="addExpense()">Guardar Gasto</button>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">Historial</h3>
+        <div id="historyList"></div>
+        <br>
+        <button onclick="clearAll()" style="background:#eee; color:#555; border:none; width:100%; padding:12px; border-radius:10px; font-weight:bold">🗑️ Reiniciar Todo</button>
+    </div>
+
+    <div id="settleModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">Saldar Deuda</div>
+            <p style="color:#666; font-size:0.9rem; margin-bottom:15px">
+                <span id="modalDebtorName"></span> debe pagarle a <span id="modalCreditorName"></span>.
+            </p>
+            
+            <label style="text-align:left">Monto a pagar ahora:</label>
+            <input type="number" id="settleAmount" style="text-align:center; font-size:1.2rem; font-weight:bold" inputmode="decimal">
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeSettleModal()">Cancelar</button>
+                <button class="btn-pay" onclick="executeSettlement()">¡Pagado!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN ---
+        let activeUser = 'Ana';
+        let expenses = JSON.parse(localStorage.getItem('ana_ariel_v3')) || [];
+        
+        let balanceChart, categoryChart, monthlyChart;
+        let currentDebt = 0;
+        let debtor = '';
+        let creditor = '';
+
+        const catColors = {
+            'Comida': '#FF6384',
+            'Mano de obra': '#36A2EB',
+            'Hogar': '#FFCE56',
+            'Servicios': '#4BC0C0',
+            'Ocio': '#9966FF',
+            'Otros': '#C9CBCF',
+            'Liquidación': '#28a745'
+        };
+
+        // --- FUNCIONES UI ---
+        function setUser(name) {
+            activeUser = name;
+            document.getElementById('btnAna').className = name === 'Ana' ? 'user-btn active-ana' : 'user-btn';
+            document.getElementById('btnAriel').className = name === 'Ariel' ? 'user-btn active-ariel' : 'user-btn';
+        }
+
+        function showTab(tabName, btn) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('tab-balance').style.display = 'none';
+            document.getElementById('tab-categorias').style.display = 'none';
+            document.getElementById('tab-mensual').style.display = 'none';
+
+            // CORRECCIÓN: concatenar el id correctamente
+            const targetId = 'tab-' + tabName;
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) targetEl.style.display = 'block';
+        }
+
+        // --- MODAL LOGIC ---
+        function openSettleModal() {
+            document.getElementById('settleModal').style.display = 'flex';
+            document.getElementById('settleAmount').value = currentDebt.toFixed(0); // Sugerir total
+            document.getElementById('modalDebtorName').innerText = debtor;
+            document.getElementById('modalCreditorName').innerText = creditor;
+        }
+
+        function closeSettleModal() {
+            document.getElementById('settleModal').style.display = 'none';
+        }
+
+        function executeSettlement() {
+            const payAmount = parseFloat(document.getElementById('settleAmount').value);
+
+            if (!payAmount || payAmount <= 0) {
+                alert("Por favor ingresa un monto válido mayor a 0.");
+                return;
+            }
+
+            // Crear registro de pago (Positivo para el que debe)
+            expenses.push({
+                id: Date.now(),
+                payer: debtor,
+                amount: payAmount,
+                category: 'Liquidación',
+                concept: '💸 Pago Parcial/Total',
+                isSettlement: true
+            });
+
+            // Crear reembolso (Negativo para el que recibe)
+            expenses.push({
+                id: Date.now() + 1,
+                payer: creditor,
+                amount: -payAmount,
+                category: 'Liquidación',
+                concept: '✅ Reembolso recibido',
+                isSettlement: true
+            });
+
+            saveAndRender();
+            closeSettleModal();
+        }
+
+        // --- LÓGICA DE GASTOS ---
+        function addExpense() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const category = document.getElementById('category').value;
+            const concept = document.getElementById('concept').value || category;
+
+            if (!amount) { alert("Falta el monto"); return; }
+
+            const newExpense = {
+                id: Date.now(),
+                payer: activeUser,
+                amount: amount,
+                category: category,
+                concept: concept,
+                isSettlement: false
+            };
+
+            expenses.push(newExpense);
+            saveAndRender();
+            
+            document.getElementById('amount').value = '';
+            document.getElementById('concept').value = '';
+        }
+
+        function deleteExpense(id) {
+            if(confirm("¿Borrar este registro?")) {
+                expenses = expenses.filter(e => e.id !== id);
+                saveAndRender();
+            }
+        }
+
+        function clearAll() {
+            if(confirm("⚠️ ¿Seguro que quieres borrar TODOS los datos?")) {
+                expenses = [];
+                saveAndRender();
+            }
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('ana_ariel_v3', JSON.stringify(expenses));
+            const stats = calculateStats();
+            updateUI(stats);
+            updateHistory();
+            updateCharts(stats);
+        }
+
+        function calculateStats() {
+            let totalAna = 0, totalAriel = 0;
+            
+            expenses.forEach(e => {
+                if(e.payer === 'Ana') totalAna += e.amount;
+                else totalAriel += e.amount;
+            });
+
+            const grandTotal = totalAna + totalAriel;
+            const half = grandTotal / 2;
+            const diff = totalAna - half; 
+
+            return { totalAna, totalAriel, grandTotal, diff };
+        }
+
+        function updateUI(stats) {
+            // CORRECCIÓN: usar template literals/backticks o concatenación para armar strings
+            document.getElementById('totalAna').innerText = `$${stats.totalAna.toFixed(0)}`;
+            document.getElementById('totalAriel').innerText = `$${stats.totalAriel.toFixed(0)}`;
+            document.getElementById('totalGlobal').innerText = `$${stats.grandTotal.toFixed(0)}`;
+
+            const msgBox = document.getElementById('balanceMsg');
+            const btnContainer = document.getElementById('settleBtnContainer');
+            const btnText = document.getElementById('settleBtnText');
+
+            // reset clases (mantener balance-msg)
+            msgBox.className = 'balance-msg';
+
+            if (Math.abs(stats.diff) < 1) {
+                msgBox.innerText = "✨ ¡Están a mano!";
+                msgBox.classList.add('green-box');
+                btnContainer.style.display = 'none'; 
+                currentDebt = 0;
+            } else if (stats.diff > 0) {
+                // Ariel debe
+                currentDebt = stats.diff;
+                debtor = 'Ariel';
+                creditor = 'Ana';
+                msgBox.innerText = `📢 Ariel debe: $${stats.diff.toFixed(0)}`;
+                msgBox.classList.add('red-box');
+                
+                btnContainer.style.display = 'block';
+                btnText.innerText = 'Saldar deuda';
+            } else {
+                // Ana debe
+                currentDebt = Math.abs(stats.diff);
+                debtor = 'Ana';
+                creditor = 'Ariel';
+                msgBox.innerText = `📢 Ana debe: $${Math.abs(stats.diff).toFixed(0)}`;
+                msgBox.classList.add('red-box');
+                
+                btnContainer.style.display = 'block';
+                btnText.innerText = 'Saldar deuda';
+            }
+        }
+
+        function updateHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            expenses.slice().reverse().slice(0, 20).forEach(e => {
+                const dateStr = new Date(e.id).toLocaleDateString('es-ES', {day:'numeric', month:'short'});
+                const color = e.payer === 'Ana' ? 'var(--primary)' : 'var(--secondary)';
+                
+                let icon = '📦';
+                if(e.category.includes('Comida')) icon = '🛒';
+                if(e.category.includes('Mano')) icon = '🛠️';
+                if(e.category.includes('Hogar')) icon = '🏠';
+                if(e.category.includes('Servicios')) icon = '💡';
+                if(e.category.includes('Ocio')) icon = '🍿';
+                if(e.category.includes('Liquidación')) icon = '💸';
+
+                const bgStyle = e.category === 'Liquidación' ? 'background:#e8f5e9;' : '';
+
+                list.innerHTML += `
+                    <div class="expense-item" style="${bgStyle}">
+                        <div>
+                            <div style="font-weight:bold; font-size:0.95rem">${icon} ${e.concept}</div>
+                            <div style="font-size:0.8rem; color:#888">
+                                ${dateStr} • <span style="color:${color}; font-weight:bold">${e.payer}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center">
+                            <span style="font-weight:bold; ${e.amount < 0 ? 'color:#28a745' : ''}">
+                                ${e.amount < 0 ? '' : '$'}${Math.abs(e.amount).toFixed(0)}
+                            </span>
+                            <button class="delete-btn" onclick="deleteExpense(${e.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateCharts(stats) {
+            // CHART 1: Balance
+            if (balanceChart) balanceChart.destroy();
+            const ctx1 = document.getElementById('balanceChart').getContext('2d');
+            balanceChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ana', 'Ariel'],
+                    datasets: [{
+                        data: [stats.totalAna, stats.totalAriel],
+                        backgroundColor: ['#4e54c8', '#ff9966'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '65%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // CHART 2: Categorías
+            const catTotals = {};
+            expenses.forEach(e => {
+                if (e.category !== 'Liquidación') {
+                    if(!catTotals[e.category]) catTotals[e.category] = 0;
+                    catTotals[e.category] += e.amount;
+                }
+            });
+            if (categoryChart) categoryChart.destroy();
+            const ctx2 = document.getElementById('categoryChart').getContext('2d');
+            categoryChart = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(catTotals),
+                    datasets: [{
+                        data: Object.values(catTotals),
+                        backgroundColor: Object.keys(catTotals).map(l => catColors[l] || '#ccc'),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: {boxWidth: 12, font:{size:11}} } }
+                }
+            });
+
+            // CHART 3: Mensual
+            const monthlyData = {};
+            expenses.forEach(e => {
+                if (e.category !== 'Liquidación') {
+                    const d = new Date(e.id);
+                    const key = d.toLocaleDateString('es-ES', { month: 'short' });
+                    if(!monthlyData[key]) monthlyData[key] = 0;
+                    monthlyData[key] += e.amount;
+                }
+            });
+            if (monthlyChart) monthlyChart.destroy();
+            const ctx3 = document.getElementById('monthlyChart').getContext('2d');
+            monthlyChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(monthlyData),
+                    datasets: [{
+                        label: 'Gasto', data: Object.values(monthlyData),
+                        backgroundColor: '#333', borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { x: {grid:{display:false}}, y:{display:false} },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // inicializar vista
+        saveAndRender();
+    </script>
+</body>
+</html>
