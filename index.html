@@ -6,18 +6,17 @@
     <title>Transporte Martín Celesia</title>
     <style>
         :root {
-            /* Colores de marca: Azul Oscuro Profesional */
-            --primary: #1e3a8a; 
-            --secondary: #1e40af;
-            --bg: #f8fafc;
+            --brand: #1e3a8a; /* Azul oscuro corporativo */
+            --accent: #f59e0b; /* Naranja/Amarillo tipo escolar */
+            --bg: #f1f5f9;
             --card: #ffffff;
             --text: #334155;
-            --accent: #3b82f6;
-            --success: #15803d;
+            --success: #16a34a;
+            --danger: #ef4444;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
@@ -25,366 +24,190 @@
             padding-bottom: 80px;
         }
 
-        /* HEADER DE MARCA */
+        /* HEADER */
         .brand-header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--brand), #1e40af);
             color: white;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .brand-header h1 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .brand-subtitle {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-top: 5px;
-            font-weight: 300;
+        .brand-header h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
+        .brand-tag { 
+            background: var(--accent); color: #000; 
+            font-size: 0.7rem; padding: 3px 8px; border-radius: 10px; 
+            font-weight: bold; margin-top: 5px; display: inline-block;
         }
 
-        /* TABS DE NAVEGACIÓN */
-        .nav-tabs {
-            display: flex;
-            background: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
+        /* TABS */
+        .nav-tabs { display: flex; background: white; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #cbd5e1; }
         .tab-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: transparent;
-            color: #64748b;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: 0.3s;
+            flex: 1; padding: 15px; border: none; background: transparent;
+            font-weight: 700; color: #64748b; border-bottom: 4px solid transparent;
+            transition: 0.3s; cursor: pointer;
         }
+        .tab-btn.active { color: var(--brand); border-bottom-color: var(--brand); background: #eff6ff; }
 
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-            background: #eff6ff;
-        }
-
-        /* CONTENEDOR */
-        .container {
-            padding: 15px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
+        /* CONTENT */
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
         .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from {opacity: 0; transform: translateY(5px);} to {opacity: 1; transform: translateY(0);} }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(5px);} to {opacity:1; transform:translateY(0);} }
 
-        /* TARJETAS */
+        /* CARDS */
         .card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: var(--card); border-radius: 12px; padding: 18px;
+            margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
         }
-
-        h2 {
-            margin: 0 0 15px 0;
-            font-size: 1.05rem;
-            color: var(--secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px dashed #cbd5e1;
-            padding-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        h2 { margin: 0 0 12px 0; font-size: 1.1rem; color: var(--brand); border-bottom: 1px dashed #cbd5e1; padding-bottom: 5px; }
 
         /* INPUTS */
-        .input-group { margin-bottom: 12px; }
-        
-        label {
-            display: block;
-            font-size: 0.85rem;
-            color: #475569;
-            margin-bottom: 5px;
-            font-weight: 600;
+        label { display: block; font-size: 0.85rem; color: #475569; margin-bottom: 5px; font-weight: 600; }
+        select, input {
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1;
+            border-radius: 8px; font-size: 1rem; background: #f8fafc; box-sizing: border-box; margin-bottom: 12px;
         }
+        select:focus, input:focus { outline: none; border-color: var(--brand); background: white; }
 
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            background: #f8fafc;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        /* SWITCH MODO CHOFER */
-        .mode-selector {
-            display: flex;
-            background: #e2e8f0;
-            border-radius: 8px;
-            padding: 4px;
-            margin-bottom: 15px;
-        }
-
-        .mode-option {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #64748b;
-            transition: 0.3s;
-        }
-
-        .mode-option.selected {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* RESUMEN COSTOS FIJOS */
-        .cost-summary {
-            background: #1e293b;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
+        /* RESULT BOXES */
+        .apoeta-box {
+            background: #fffbeb; border: 2px solid var(--accent);
+            border-radius: 12px; padding: 20px; text-align: center;
             margin-bottom: 20px;
         }
-        .cost-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px; }
-        .cost-total { 
-            border-top: 1px solid #334155; 
-            margin-top: 10px; 
-            padding-top: 10px; 
-            text-align: right; 
-            font-weight: bold; 
-            color: #60a5fa; 
-            font-size: 1.2rem;
+        .price-big { font-size: 2.2rem; font-weight: 800; color: #b45309; margin: 5px 0; }
+        .price-label { font-size: 0.8rem; text-transform: uppercase; color: #92400e; font-weight: bold; }
+
+        .profit-box {
+            background: #1e293b; color: white; padding: 15px; border-radius: 10px;
+        }
+        .profit-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        .profit-total { 
+            font-size: 1.5rem; font-weight: bold; text-align: center; 
+            margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155; 
+            color: var(--success);
         }
 
-        /* CAJA DE RESULTADOS */
-        .final-box {
-            background: #f0fdf4;
-            border: 2px solid #16a34a;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            position: sticky;
-            top: 60px; /* Para que se vea al bajar un poco */
-            z-index: 90;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .price-label { font-size: 0.8rem; text-transform: uppercase; color: #15803d; font-weight: 700; }
-        .price-tag {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #15803d;
-            margin: 5px 0;
-        }
-        .profit-info {
-            font-size: 0.9rem;
-            color: #166534;
-            background: #dcfce7;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-        }
+        .alert-info { font-size: 0.8rem; color: #64748b; background: #f1f5f9; padding: 8px; border-radius: 6px; margin-top: 5px; }
 
-        .hidden { display: none; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
 
 <div class="brand-header">
     <h1>Transporte Martín Celesia</h1>
-    <div class="brand-subtitle">Calculadora de Costos y Viajes</div>
+    <span class="brand-tag">LISTA PRECIOS NOV 2025</span>
 </div>
 
 <div class="nav-tabs">
-    <button class="tab-btn active" onclick="setTab('config')">1. Configuración</button>
-    <button class="tab-btn" onclick="setTab('cotizar')">2. Cotizar Viaje</button>
+    <button class="tab-btn active" onclick="setTab('lista')">1. Lista Oficial</button>
+    <button class="tab-btn" onclick="setTab('costos')">2. Mis Costos Real</button>
 </div>
 
 <div class="container">
 
-    <!-- PESTAÑA 1: CONFIGURACIÓN -->
-    <div id="config" class="tab-content active">
+    <!-- TAB 1: PRECIOS DE LISTA (APOETA) -->
+    <div id="lista" class="tab-content active">
         
-        <!-- MODO CHOFER -->
-        <div class="card" style="border-top: 4px solid var(--primary);">
-            <h2>👨‍✈️ Modalidad Chofer</h2>
-            <div class="mode-selector">
-                <div class="mode-option selected" id="btn_mensual" onclick="setMode('mensual')">Sueldo Mensual</div>
-                <div class="mode-option" id="btn_viaje" onclick="setMode('viaje')">Pago x Viaje</div>
+        <div class="apoeta-box">
+            <div class="price-label">Precio Sugerido (APOETA)</div>
+            <div class="price-big" id="res_lista">$0</div>
+            <div style="font-size:0.8rem; color:#b45309;">+ PEAJES (No incluidos)</div>
+        </div>
+
+        <div class="card">
+            <h2>🚌 Configuración del Servicio</h2>
+            
+            <label>Tipo de Vehículo</label>
+            <select id="sel_vehiculo" onchange="actualizarLista()">
+                <option value="camioneta">Camioneta</option>
+                <option value="bus">Bus 45 Asientos</option>
+            </select>
+
+            <label>Categoría</label>
+            <select id="sel_categoria" onchange="cargarServicios()">
+                <option value="caba">Servicios Diurnos CABA / Especiales</option>
+                <option value="zona">Media/Larga Distancia (Por Zonas)</option>
+            </select>
+
+            <label>Destino / Servicio</label>
+            <select id="sel_servicio" onchange="actualizarLista()">
+                <!-- Se llena con JS -->
+            </select>
+
+            <!-- Opción solo para Zonas -->
+            <div id="div_jornada" style="display:none; background:#fff7ed; padding:10px; border-radius:8px;">
+                <label style="margin-bottom:0; color:#c2410c;">
+                    <input type="checkbox" id="chk_media_dia" style="width:auto; margin-right:10px;" onchange="actualizarLista()">
+                    Es Medio Día (70% del valor)
+                </label>
             </div>
             
-            <div id="input_sueldo_mensual" class="input-group">
-                <label>Sueldo Mensual Total ($)</label>
-                <input type="number" id="sueldo_mes" placeholder="Sueldo + Cargas" oninput="calcConfig()">
-            </div>
-            <div id="info_viaje" class="input-group hidden" style="text-align:center; color:#64748b; font-size:0.9rem;">
-                <small>El costo del chofer se ingresará manualmente en cada cotización.</small>
+            <div class="alert-info">
+                ℹ️ Nota: Los precios incluyen una estimación del 10% de aumento sobre la última cuota.
             </div>
         </div>
 
-        <!-- RESUMEN EN TIEMPO REAL -->
-        <div class="cost-summary">
-            <div style="font-size:0.75rem; text-transform:uppercase; color:#94a3b8; margin-bottom:10px; letter-spacing:1px;">Costo Operativo por Hora</div>
-            <div class="cost-row">
-                <span>Amortización Vehículo:</span> <span id="disp_amort">$0</span>
-            </div>
-            <div class="cost-row">
-                <span>Seguro + Monotrib + Fijos:</span> <span id="disp_seguro">$0</span>
-            </div>
-            <div class="cost-row">
-                <span>Costo Chofer (Hora):</span> <span id="disp_chofer_base">$0</span>
-            </div>
-            <div class="cost-total">
-                <span id="disp_total_hora">$0</span>
-                <small style="font-size:0.7rem; display:block; color:#94a3b8;">COSTO REAL POR HORA</small>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>⏱️ Base Operativa</h2>
-            <div class="input-group">
-                <label>Horas de trabajo al mes</label>
-                <input type="number" id="horas_mes" value="176" oninput="calcConfig()">
-                <small style="color:#94a3b8;">Ej: 8hs x 22 días = 176hs</small>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🚛 Amortización Unidad</h2>
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>Valor Vehículo ($)</label>
-                    <input type="number" id="valor_vehiculo" placeholder="$$$" oninput="calcConfig()">
-                </div>
-                <div class="input-group">
-                    <label>Años a amortizar</label>
-                    <input type="number" id="anios_amort" value="5" oninput="calcConfig()">
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🛡️ Impuestos y Fijos</h2>
-            <div class="input-group">
-                <label>Seguro Mensual ($)</label>
-                <input type="number" id="seguro_mes" placeholder="$" oninput="calcConfig()">
-            </div>
-            <div class="input-group" style="background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
-                <label style="color:#1e3a8a;">Monotributo Mensual ($)</label>
-                <input type="number" id="monotributo_mes" placeholder="$" oninput="calcConfig()">
-            </div>
-            <div class="input-group">
-                <label>Otros Gastos (Cochera, Patente)</label>
-                <input type="number" id="otros_mes" value="0" oninput="calcConfig()">
-            </div>
-        </div>
+        <button onclick="copiarPrecio()" style="width:100%; background:var(--brand); color:white; padding:15px; border:none; border-radius:10px; font-weight:bold; font-size:1rem;">
+            USAR ESTE PRECIO PARA ANALIZAR ⬇️
+        </button>
     </div>
 
-    <!-- PESTAÑA 2: COTIZAR -->
-    <div id="cotizar" class="tab-content">
+    <!-- TAB 2: ANÁLISIS DE COSTOS -->
+    <div id="costos" class="tab-content">
         
-        <div class="final-box">
-            <div class="price-label">Precio Final Sugerido</div>
-            <div class="price-tag" id="res_precio">$0</div>
-            <div class="profit-info">
-                Ganancia Neta: <span id="res_ganancia" style="font-weight:bold;">$0</span>
+        <div class="profit-box">
+            <div class="profit-row">
+                <span>Precio Cobrado (Lista):</span>
+                <span id="ana_precio" style="color:#fbbf24; font-weight:bold;">$0</span>
             </div>
-            <div style="margin-top:5px; font-size:0.8rem; color:#64748b;">
-                Costo Base: <span id="res_costo">$0</span>
+            <div class="profit-row">
+                <span> - Costo Operativo Real:</span>
+                <span id="ana_costo">$0</span>
             </div>
+            <div class="profit-total" id="ana_ganancia">
+                $0
+            </div>
+            <div style="text-align:center; font-size:0.8rem; color:#94a3b8;">GANANCIA FINAL BOLSILLO</div>
         </div>
+
         <br>
 
         <div class="card">
-            <h2>📍 Detalles del Viaje</h2>
-            
-            <!-- Campo Chofer Eventual -->
-            <div id="campo_chofer_viaje" class="input-group hidden" style="background: #e0f2fe; padding: 10px; border-radius: 8px; border: 1px dashed #3b82f6; margin-bottom:15px;">
-                <label style="color:#1e40af;">💰 Pago al Chofer (Solo este viaje)</label>
-                <input type="number" id="pago_chofer_viaje" placeholder="$ Monto a pagar" oninput="calcViaje()">
-            </div>
-
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>Duración (Horas)</label>
-                    <input type="number" id="viaje_horas" placeholder="Hs totales" oninput="calcViaje()">
+            <h2>⛽ Costos del Viaje</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label>KM Totales</label>
+                    <input type="number" id="km" placeholder="0" oninput="calcularRentabilidad()">
                 </div>
-                <div class="input-group">
-                    <label>Distancia (KM)</label>
-                    <input type="number" id="viaje_km" placeholder="Ida y Vuelta" oninput="calcViaje()">
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🛑 Paradas de Pasajeros</h2>
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>Cant. Paradas</label>
-                    <input type="number" id="num_paradas" value="0" placeholder="0" oninput="calcViaje()">
-                </div>
-                <div class="input-group">
-                    <label>Costo x Parada ($)</label>
-                    <input type="number" id="val_parada" value="0" placeholder="$" oninput="calcViaje()">
-                </div>
-            </div>
-            <small style="color:#64748b;">El costo por tiempo ya se incluye en las horas. Agrega aquí costos extra por parada (tasas, parking, etc).</small>
-        </div>
-
-        <div class="card">
-            <h2>⛽ Combustible</h2>
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>Precio ($/Litro)</label>
-                    <input type="number" id="precio_litro" oninput="calcViaje()">
-                </div>
-                <div class="input-group">
+                <div>
                     <label>Consumo (km/l)</label>
-                    <input type="number" id="rendimiento" value="8" oninput="calcViaje()">
+                    <input type="number" id="consumo" value="8" oninput="calcularRentabilidad()">
                 </div>
             </div>
+            <label>Precio Diesel ($)</label>
+            <input type="number" id="precio_diesel" placeholder="$" oninput="calcularRentabilidad()">
         </div>
 
         <div class="card">
-            <h2>📈 Rentabilidad</h2>
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>Peajes / Extras</label>
-                    <input type="number" id="viaje_extras" value="0" oninput="calcViaje()">
-                </div>
-                <div class="input-group">
-                    <label>Tu Margen (%)</label>
-                    <input type="number" id="margen" value="30" style="background:#f0fdf4; border-color:#16a34a;" oninput="calcViaje()">
-                </div>
+            <h2>👨‍✈️ Chofer y Fijos</h2>
+            <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:10px;">
+                <label>Pago Chofer (Este viaje)</label>
+                <input type="number" id="chofer_viaje" placeholder="$ Opcional" oninput="calcularRentabilidad()" style="margin-bottom:0;">
             </div>
+            
+            <label>Monotributo + Seguro + Amort. (Valor Hora)</label>
+            <input type="number" id="costo_hora_fijo" value="5000" placeholder="Ej: 5000" oninput="calcularRentabilidad()">
+            
+            <label>Duración del Trabajo (Horas)</label>
+            <input type="number" id="horas_trabajo" placeholder="Hs" oninput="calcularRentabilidad()">
+        </div>
+
+        <div class="card">
+            <h2>🚧 Extras</h2>
+            <label>Peajes / Parking ($)</label>
+            <input type="number" id="gastos_extra" value="0" oninput="calcularRentabilidad()">
         </div>
 
     </div>
@@ -392,122 +215,131 @@
 </div>
 
 <script>
-    // ESTADO
-    let MODE = 'mensual';
-    let COSTO_HORA_MAQUINA = 0; 
-    let COSTO_HORA_CHOFER = 0; 
+    // --- DATOS DE LA LISTA (IMAGEN) ---
+    const DB = {
+        caba: [
+            { id: 'cumple', nombre: 'Cumpleaños (Solo Ida)', cam: 112000, bus: 151000 },
+            { id: 'deporte_medio', nombre: 'C. Deportes (1/2 Día)', cam: 114000, bus: 154500 },
+            { id: 'pileta', nombre: 'Piletas', cam: 105000, bus: 136500 },
+            { id: 'excu_medio', nombre: 'Excursión (Medio Día)', cam: 135500, bus: 184000 },
+            { id: 'excu_todo', nombre: 'Excursión (Todo el Día)', cam: 222000, bus: 305000 },
+            { id: 'city', nombre: 'City Tour 1/2 Día', cam: 152000, bus: 209000 },
+            { id: 'deporte_lejos', nombre: 'C. Deportes (hasta 50km)', cam: 214000, bus: 290000 },
+            // Especiales lista derecha
+            { id: 'serenisima', nombre: 'La Serenísima (1/2 Día)', cam: 0, bus: 420000 },
+            { id: 'temaiken', nombre: 'Temaikén', cam: 0, bus: 558000 },
+            { id: 'ceamse', nombre: 'Ceamse / Bs As', cam: 0, bus: 406000 },
+            { id: 'bimbo', nombre: 'Bimbo - Pilar', cam: 0, bus: 630000 }
+        ],
+        zona: [
+            { id: 't1', nombre: 'T1 (25km): Vte Lopez, Lanus, San Isidro...', cam: 220000, bus: 310000 },
+            { id: 't2', nombre: 'T2 (40km): Tigre, Ezeiza, Merlo, Quilmes...', cam: 290000, bus: 410000 },
+            { id: 't3', nombre: 'T3 (60km): Pilar, Escobar, La Plata, Gral Rod...', cam: 400000, bus: 540000 },
+            { id: 't4', nombre: 'T4 (80km): Luján, Cañuelas, Campana...', cam: 500000, bus: 680000 },
+            { id: 't5', nombre: 'T5 (100km): Zárate, Lobos, Mercedes...', cam: 605000, bus: 800000 }
+        ]
+    };
 
+    let PRECIO_LISTA_ACTUAL = 0;
     const money = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 });
 
-    // NAVEGACIÓN
+    // --- LÓGICA DE UI ---
     function setTab(tab) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
         document.getElementById(tab).classList.add('active');
-        if(tab === 'config') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        if(tab === 'lista') document.querySelectorAll('.tab-btn')[0].classList.add('active');
         else document.querySelectorAll('.tab-btn')[1].classList.add('active');
     }
 
-    function setMode(mode) {
-        MODE = mode;
-        document.getElementById('btn_mensual').classList.toggle('selected', mode === 'mensual');
-        document.getElementById('btn_viaje').classList.toggle('selected', mode === 'viaje');
+    function cargarServicios() {
+        const cat = document.getElementById('sel_categoria').value;
+        const sel = document.getElementById('sel_servicio');
+        const divJornada = document.getElementById('div_jornada');
+        
+        sel.innerHTML = '';
+        
+        // Mostrar checkbox medio día solo en Zonas
+        divJornada.style.display = (cat === 'zona') ? 'block' : 'none';
 
-        const inputMensual = document.getElementById('input_sueldo_mensual');
-        const infoViaje = document.getElementById('info_viaje');
-        const campoChoferViaje = document.getElementById('campo_chofer_viaje');
-
-        if(mode === 'mensual') {
-            inputMensual.classList.remove('hidden');
-            infoViaje.classList.add('hidden');
-            campoChoferViaje.classList.add('hidden');
-            document.getElementById('pago_chofer_viaje').value = 0;
-        } else {
-            inputMensual.classList.add('hidden');
-            infoViaje.classList.remove('hidden');
-            campoChoferViaje.classList.remove('hidden');
-        }
-        calcConfig();
+        DB[cat].forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = JSON.stringify(item); // Guardamos todo el objeto en el value
+            opt.text = item.nombre;
+            sel.add(opt);
+        });
+        actualizarLista();
     }
 
-    // CÁLCULO CONFIGURACIÓN (COSTO HORA)
-    function calcConfig() {
-        let horasMes = parseFloat(document.getElementById('horas_mes').value) || 1;
-        
-        // 1. Amortización
-        let valorVehiculo = parseFloat(document.getElementById('valor_vehiculo').value) || 0;
-        let anios = parseFloat(document.getElementById('anios_amort').value) || 1;
-        let amortHora = (valorVehiculo / (anios * 12)) / horasMes;
+    function actualizarLista() {
+        const vehiculo = document.getElementById('sel_vehiculo').value; // 'cam' o 'bus'
+        const item = JSON.parse(document.getElementById('sel_servicio').value);
+        const esMediaDia = document.getElementById('chk_media_dia').checked;
+        const categoria = document.getElementById('sel_categoria').value;
 
-        // 2. Fijos (Seguro + Monotributo + Otros)
-        let seguro = parseFloat(document.getElementById('seguro_mes').value) || 0;
-        let monotributo = parseFloat(document.getElementById('monotributo_mes').value) || 0;
-        let otros = parseFloat(document.getElementById('otros_mes').value) || 0;
-        
-        let fijosTotalMes = seguro + monotributo + otros;
-        let fijosHora = fijosTotalMes / horasMes;
+        // Propiedad a buscar: 'cam' o 'bus'
+        let precioBase = (vehiculo === 'camioneta') ? item.cam : item.bus;
 
-        // 3. Chofer
-        let choferHora = 0;
-        if(MODE === 'mensual') {
-            let sueldo = parseFloat(document.getElementById('sueldo_mes').value) || 0;
-            choferHora = sueldo / horasMes;
+        // Si el precio es 0 (ej: temaiken en camioneta no está listado), avisar
+        if (precioBase === 0) {
+            document.getElementById('res_lista').innerText = "Consultar";
+            PRECIO_LISTA_ACTUAL = 0;
+            return;
         }
 
-        // SET GLOBALES
-        COSTO_HORA_MAQUINA = amortHora + fijosHora;
-        COSTO_HORA_CHOFER = choferHora;
+        // Lógica Medio Día (Solo aplica a Zonas según la imagen: "MEDIO DÍA: 70% de Todo el día")
+        if (categoria === 'zona' && esMediaDia) {
+            precioBase = precioBase * 0.70;
+        }
 
-        // UI
-        document.getElementById('disp_amort').innerText = money.format(amortHora);
-        document.getElementById('disp_seguro').innerText = money.format(fijosHora);
-        document.getElementById('disp_chofer_base').innerText = MODE === 'mensual' ? money.format(choferHora) : "Según Viaje";
-        document.getElementById('disp_total_hora').innerText = money.format(COSTO_HORA_MAQUINA + COSTO_HORA_CHOFER);
-
-        calcViaje();
+        PRECIO_LISTA_ACTUAL = precioBase;
+        document.getElementById('res_lista').innerText = money.format(PRECIO_LISTA_ACTUAL);
     }
 
-    // CÁLCULO COTIZACIÓN
-    function calcViaje() {
-        // Datos
-        let horas = parseFloat(document.getElementById('viaje_horas').value) || 0;
-        let km = parseFloat(document.getElementById('viaje_km').value) || 0;
-        let precioLitro = parseFloat(document.getElementById('precio_litro').value) || 0;
-        let rend = parseFloat(document.getElementById('rendimiento').value) || 1;
-        let extras = parseFloat(document.getElementById('viaje_extras').value) || 0;
-        let margen = parseFloat(document.getElementById('margen').value) || 0;
+    // --- PASAR PRECIO A CALCULADORA ---
+    function copiarPrecio() {
+        setTab('costos');
+        calcularRentabilidad();
+    }
 
-        // Paradas Pasajeros
-        let numParadas = parseFloat(document.getElementById('num_paradas').value) || 0;
-        let valParada = parseFloat(document.getElementById('val_parada').value) || 0;
-        let totalParadas = numParadas * valParada;
+    // --- LÓGICA DE RENTABILIDAD ---
+    function calcularRentabilidad() {
+        // Ingresos
+        document.getElementById('ana_precio').innerText = money.format(PRECIO_LISTA_ACTUAL);
 
         // Costos
-        let costoMaquina = COSTO_HORA_MAQUINA * horas;
-        let costoComb = (km / rend) * precioLitro;
+        let km = parseFloat(document.getElementById('km').value) || 0;
+        let consumo = parseFloat(document.getElementById('consumo').value) || 1;
+        let diesel = parseFloat(document.getElementById('precio_diesel').value) || 0;
         
-        let costoChofer = 0;
-        if(MODE === 'mensual') {
-            costoChofer = COSTO_HORA_CHOFER * horas;
+        let costoCombustible = (km / consumo) * diesel;
+
+        let chofer = parseFloat(document.getElementById('chofer_viaje').value) || 0;
+        
+        let valorHora = parseFloat(document.getElementById('costo_hora_fijo').value) || 0;
+        let horas = parseFloat(document.getElementById('horas_trabajo').value) || 0;
+        let costoFijoTiempo = valorHora * horas; // Amortizacion + Monotributo prorrateado
+
+        let extras = parseFloat(document.getElementById('gastos_extra').value) || 0;
+
+        let costoTotal = costoCombustible + chofer + costoFijoTiempo + extras;
+        let ganancia = PRECIO_LISTA_ACTUAL - costoTotal;
+
+        // Render
+        document.getElementById('ana_costo').innerText = money.format(costoTotal);
+        
+        const elGanancia = document.getElementById('ana_ganancia');
+        elGanancia.innerText = money.format(ganancia);
+        
+        if(ganancia > 0) {
+            elGanancia.style.color = "#16a34a"; // Verde
         } else {
-            costoChofer = parseFloat(document.getElementById('pago_chofer_viaje').value) || 0;
+            elGanancia.style.color = "#ef4444"; // Rojo
         }
-
-        // Sumatoria
-        let costoOperativo = costoMaquina + costoChofer + costoComb + totalParadas + extras;
-        
-        // Precio Final
-        let ganancia = costoOperativo * (margen / 100);
-        let precioFinal = costoOperativo + ganancia;
-
-        // UI
-        document.getElementById('res_costo').innerText = money.format(costoOperativo);
-        document.getElementById('res_ganancia').innerText = money.format(ganancia);
-        document.getElementById('res_precio').innerText = money.format(precioFinal);
     }
 
-    // Init
-    calcConfig();
+    // Inicializar
+    cargarServicios();
 
 </script>
 
